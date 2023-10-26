@@ -48,7 +48,12 @@ class _IkanListPageState extends State<IkanListPage> {
                   title: Text(ikan.nama),
                   subtitle: Text(ikan.jenis),
                   onTap: () {
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailIkanPage(ikan),
+                      ),
+                    );
                   },
                 );
               },
@@ -58,7 +63,12 @@ class _IkanListPageState extends State<IkanListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Tampilkan formulir tambah ikan
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TambahIkanForm(),
+            ),
+          );
         },
         child: Icon(Icons.add),
       ),
@@ -84,4 +94,66 @@ class _TambahIkanFormState extends State<TambahIkanForm> {
         title: Text('Tambah Ikan'),
       ),
       body: Padding(
-        padding: EdgeInsets.all
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextFormField(
+              controller: namaController,
+              decoration: InputDecoration(labelText: 'Nama'),
+            ),
+            TextFormField(
+              controller: jenisController,
+              decoration: InputDecoration(labelText: 'Jenis'),
+            ),
+            TextFormField(
+              controller: warnaController,
+              decoration: InputDecoration(labelText: 'Warna'),
+            ),
+            TextFormField(
+              controller: habitatController,
+              decoration: InputDecoration(labelText: 'Habitat'),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                apiService.addIkan(
+                  Ikan(
+                    nama: namaController.text,
+                    jenis: jenisController.text,
+                    warna: warnaController.text,
+                    habitat: habitatController.text,
+                  ),
+                );
+                Navigator.pop(context); 
+              },
+              child: Text('Simpan'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DetailIkanPage extends StatelessWidget {
+  final Ikan ikan;
+
+  DetailIkanPage(this.ikan);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Detail Ikan'),
+      ),
+      body: Column(
+        children: [
+          Text('Nama: ${ikan.nama}'),
+          Text('Jenis: ${ikan.jenis}'),
+          Text('Warna: ${ikan.warna}'),
+          Text('Habitat: ${ikan.habitat}'),
+        ],
+      ),
+    );
+  }
+}
